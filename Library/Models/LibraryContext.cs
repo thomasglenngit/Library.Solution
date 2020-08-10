@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore;
 namespace Library.Models
 {
   public class LibraryContext : IdentityDbContext<ApplicationUser>
-  // {
-  //   public virtual DbSet<Category> Categories { get; set; }
-  //   public DbSet<Item> Items { get; set; }
-  //   public DbSet<CategoryItem> CategoryItem { get; set; }
-    
+  {
+    public DbSet<Book> Books { get; set; }
+    public DbSet<Author> Authors { get; set; }
+    public DbSet<BookAuthor> BooksAuthors { get; set; }
+    public DbSet<Checkout> Checkouts { get; set; }
+    public DbSet<Patron> Patrons { get; set; }   
     public LibraryContext(DbContextOptions options) : base(options) { }
   }
 }
