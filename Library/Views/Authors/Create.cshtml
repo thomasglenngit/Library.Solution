@@ -1,4 +1,6 @@
-
+@{
+  Layout = "_Layout";
+}
 
 @model Library.Models.Author
 
@@ -12,3 +14,5 @@
   </div>
   <input type="submit" value="Add new author" class="btn" />
 }
+
+<p>@Html.ActionLink("Back to authors list", "Index")</p>

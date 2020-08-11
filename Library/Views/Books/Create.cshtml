@@ -1,11 +1,18 @@
-
+@{
+  Layout = "_Layout";
+}
 
 @using Library.Models
 @model Library.Models.Book
 
-
 <h3>Add new book:</h3>
 <hr />
+<p>Find author:</p>
+@using (Html.BeginForm("Create", "Books", FormMethod.Get))
+{
+  <p>@Html.TextBox("searchAuthor")</p>
+  <button class="btn" type="submit">Search</button>
+}
 @using (Html.BeginForm())
 {
   <div class="form-group">
@@ -16,27 +23,24 @@
     @Html.LabelFor(model => model.Copies)
     @Html.TextBoxFor(model => model.Copies, new {@class = "form-control", @required  = "required"})
   </div>
-
-  @if (ViewBag.AuthorId.Count != 0)
+  if(ViewBag.AuthorId != null) //Does it exist?
   {
-    <p>Find author:</p>
-    @using (Html.BeginForm("Create", "Books", FormMethod.Get))
-    {
-      <p>@Html.TextBox("searchAuthor")</p>
-      <button class="btn" type="submit">Search</button>
-    }
-    if(ViewBag.FoundAuthors.Count != 0)
+    if(ViewBag.AuthorId.Count != 0) //Is there anything in it?
     {
       <div class="form-group"> 
-        @Html.Label("Select authors:")
-        <br>
-        @foreach (Author author in ViewBag.FoundAuthors)
-        {
-          @Html.Label(author.Name)
-          @Html.CheckBox("AuthorId", false, new { value = author.AuthorId, @class="checkbox"})
-        }
+      @Html.Label("Select authors:")
+      <br>
+      @foreach (Author author in ViewBag.AuthorId)
+      {
+        @Html.Label(author.Name)
+        @Html.CheckBox("AuthorId", false, new { value = author.AuthorId, @class="checkbox"})
+      }
       </div>
     }
-  }
-  <input type="submit" value="Add new author" class="btn" />
+    else
+    {
+      <p>No authors have been found.</p>
+    }
+  } 
+  <input type="submit" value="Add new book" class="btn" />
 }

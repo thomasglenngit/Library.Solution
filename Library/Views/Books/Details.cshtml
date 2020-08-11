@@ -1,0 +1,57 @@
+@{
+  Layout = "_Layout";
+}
+
+@model Library.Models.Book;
+
+<h3>Book Details</h3>
+<hr />
+<h4>Name: @Model.Title</h4>
+<h4>Number of Copies Available: @Model.Copies</h4>
+<hr />
+<h4>Authors:</h4>
+<hr />
+@if(@Model.Authors.Count == 0)
+{
+  <h3>This Book Has No Assigned Authors</h3>
+}
+else
+{
+  @foreach(var join in Model.Authors)
+  {
+    <p>@Html.ActionLink(@join.Author.Name, "Details", "Authors", new {id = join.AuthorId})</p>
+    @using (Html.BeginForm("DeleteAuthor", "Books"))
+    {
+      @Html.Hidden("joinId", @join.BookAuthorId)
+      <input type="submit" value="Delete" class="btn btn-warning"/>
+    }
+  }
+}
+
+@* <h1>Patrons</h1>
+<hr />
+
+@if(@Model.Patrons.Count == 0)
+{
+  <h3>This Contractor Has No Assigned Weapons</h3>
+}
+else
+{
+  @foreach(var join in Model.Patrons)
+  {
+    <h4>@Html.ActionLink(@join.Armory.WeaponName, "Details", "Armorys", new {id = join.ArmoryId})</h4>
+    @using (Html.BeginForm("DeleteArmory", "Contractors"))
+    {
+      @Html.Hidden("joinId", @join.ContractorArmoryId)
+      <input type="submit" value="Delete" class="btn btn-warning"/>
+    }
+  } *@
+}
+
+<p>@Html.ActionLink("Home", "Index", "Home")</p>
+<p>@Html.ActionLink("Back to Book List", "Index")</p>
+<p>@Html.ActionLink("Edit Book Details", "Edit", new { id = Model.BookId })</p>
+<p>@Html.ActionLink("Delete Book", "Delete", new { id = Model.BookId })</p>
+<p>@Html.ActionLink("Add a Author", "addAuthor", new { id = Model.BookId })</p>
+
+

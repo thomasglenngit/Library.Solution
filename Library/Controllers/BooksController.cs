@@ -15,10 +15,14 @@ namespace Library.Controllers
       _db = db;
     }
 
-    public ActionResult Index()
+    public ActionResult Index(string searchBook)
     {
-      List<Book> model = _db.Books.ToList();
-      return View(model);
+      if(!string.IsNullOrEmpty(searchBook))
+      {
+        var searchBooks = _db.Books.Where(books => books.Title.Contains(searchBook)).ToList();                    
+        return View(searchBooks);
+      }
+      return View(_db.Books.ToList());
     }
 
     public ActionResult Details(int id)
@@ -36,9 +40,8 @@ namespace Library.Controllers
       if(!string.IsNullOrEmpty(searchAuthor))
       {
         var searchAuthors = _db.Authors.Where(authors => authors.Name.Contains(searchAuthor)).ToList();        
-        ViewBag.FoundAuthors = searchAuthors;
+        ViewBag.AuthorId = searchAuthors;
       }
-      ViewBag.AuthorId = _db.Authors.ToList();
       return View();
     }
 
@@ -57,23 +60,23 @@ namespace Library.Controllers
       return RedirectToAction("Index");
     }
 
-    /*public ActionResult Edit(int id)
+    public ActionResult Edit(int id)
     {
-      var thisContractor = _db.Contractors.FirstOrDefault(contractors => contractors.ContractorId == id);
-      return View(thisContractor);
+      var thisBook = _db.Books.FirstOrDefault(books => books.BookId == id);
+      return View(thisBook);
     }
 
     [HttpPost]
-    public ActionResult Edit(Contractor contractor)
+    public ActionResult Edit(Book book)
     {
-      _db.Entry(contractor).State = EntityState.Modified;
+      _db.Entry(book).State = EntityState.Modified;
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
 
-    public ActionResult AddClient(int id)
+    /*public ActionResult AddClient(int id)
     {
-      var thisContractor = _db.Contractors.FirstOrDefault(contractors => contractors.ContractorId == id);
+      var thisBook = _db.Contractors.FirstOrDefault(contractors => contractors.ContractorId == id);
       ViewBag.ClientId = new SelectList(_db.Clients, "ClientId", "Name");
       return View(thisContractor);
     }
@@ -94,24 +97,24 @@ namespace Library.Controllers
       }
       _db.SaveChanges();
       return RedirectToAction("Index");
-    }
+    }*/
 
     public ActionResult Delete(int id)
     {
-      var thisContractor = _db.Contractors.FirstOrDefault(contractors => contractors.ContractorId == id);
-      return View(thisContractor);
+      var thisBook = _db.Books.FirstOrDefault(books => books.BookId == id);
+      return View(thisBook);
     }
 
     [HttpPost, ActionName("Delete")]
     public ActionResult DeleteConfirmed(int id)
     {
-      var thisContractor = _db.Contractors.FirstOrDefault(contractors => contractors.ContractorId == id);
-      _db.Contractors.Remove(thisContractor);
+      var thisBook = _db.Books.FirstOrDefault(books => books.BookId == id);
+      _db.Books.Remove(thisBook);
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
 
-    [HttpPost]
+   /*[HttpPost]
     public ActionResult DeleteClient(int joinId)
     {
       var joinEntry = _db.ClientContractor.FirstOrDefault(entry => entry.ClientContractorId == joinId);
