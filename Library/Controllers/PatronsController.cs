@@ -84,8 +84,6 @@ namespace Library.Controllers
       _db.Patrons.Remove(thisPatron);
       _db.SaveChanges();
       return RedirectToAction("Index");
-    }
-
-    
+    }   
   }
 }

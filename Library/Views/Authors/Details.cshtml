@@ -1,0 +1,23 @@
+@model Library.Models.Author
+
+<h3>Author info:</h3>
+<hr />
+<p>Name: @Html.DisplayFor(model => model.Name)</p>
+<hr />
+<h4>List of books:</h4>
+@if(@Model.Books.Count == 0)
+{
+  <p>Author doesn't have any books.</p>
+}
+else
+{
+  @foreach(var join in Model.Books)
+  {
+    <p>@Html.ActionLink($"{join.Book.Title}", "Details", "Books", new { id = join.BookId})</p>
+    @*@using (Html.BeginForm("DeleteEngineer", "Machines"))
+    {
+      @Html.Hidden("joinId", @join.EngineerMachineId)
+      <input type="submit" value="Delete" class="btn" />
+    }*@
+  }
+}
