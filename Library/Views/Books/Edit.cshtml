@@ -1,0 +1,28 @@
+  
+@{
+  Layout = "_Layout";
+}
+
+@using Library.Models;
+@model Library.Models.Book;
+
+<h3>Edit Book Details:</h3>
+<hr />
+<h4>@Html.DisplayFor(model => @Model.Title)</h4>
+
+@using (Html.BeginForm())
+{
+  @Html.HiddenFor(model => model.BookId)
+  <div class="form-group">
+    @Html.LabelFor(model => model.Title)
+    @Html.TextBoxFor(model => model.Title, new { @class = "form-control", @required = true})
+  </div>
+  <div class="form-group">
+    @Html.LabelFor(model => model.Copies)
+    @Html.TextBoxFor(model => model.Copies, new { @class = "form-control", @required = true})
+  </div>
+  <input type="submit" value="Edit Book" class="btn btn-success" />
+}
+
+<p>@Html.ActionLink("Back to Book List", "Index")</p>
+<p>@Html.ActionLink("Home", "Index", "Home")</p>

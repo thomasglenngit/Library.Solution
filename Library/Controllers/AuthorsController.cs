@@ -76,5 +76,30 @@ namespace Library.Controllers
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
+
+    public ActionResult AddBook(int id, string searchBook)
+    {
+      var thisAuthor = _db.Authors.FirstOrDefault(authors => authors.AuthorId == id);
+      if(!string.IsNullOrEmpty(searchBook))
+      {
+        var searchBooks = _db.Books.Where(books => books.Title.Contains(searchBook)).ToList();
+        ViewBag.BookId = searchBooks;
+      }
+      return View(thisAuthor);
+    }
+
+    [HttpPost]
+    public ActionResult AddBook(Book book, int [] BookId)
+    {
+      if(BookId.Length != 0)
+      {
+        foreach(int id in BookId)
+        {
+          _db.BooksAuthors.Add(new BookAuthor() { BookId = id, BookAuthorId = book.BookId});
+        }
+      }
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
   }
 }

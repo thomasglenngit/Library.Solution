@@ -1,6 +1,6 @@
-@*@{
+@{
   Layout = "_Layout";
-}*@
+}
 
 @using Library.Models;
 @model List<Library.Models.Author>
@@ -23,6 +23,5 @@
   <p>@Html.ActionLink($"{author.Name}", "Details", new { id = author.AuthorId })</p> 
 }
 
-<p>@Html.ActionLink("Add new patron", "Create")</p>
-
 <p>@Html.ActionLink("Home", "Index", "Home")</p>
+<p>@Html.ActionLink("Add new author", "Create")</p>

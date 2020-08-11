@@ -15,10 +15,14 @@ namespace Library.Controllers
       _db = db;
     }
 
-    public ActionResult Index()
+    public ActionResult Index(string searchBook)
     {
-      List<Book> model = _db.Books.ToList();
-      return View(model);
+      if(!string.IsNullOrEmpty(searchBook))
+      {
+        var searchBooks = _db.Books.Where(books => books.Title.Contains(searchBook)).ToList();                    
+        return View(searchBooks);
+      }
+      return View(_db.Books.ToList());
     }
 
     public ActionResult Details(int id)
@@ -36,9 +40,8 @@ namespace Library.Controllers
       if(!string.IsNullOrEmpty(searchAuthor))
       {
         var searchAuthors = _db.Authors.Where(authors => authors.Name.Contains(searchAuthor)).ToList();        
-        ViewBag.FoundAuthors = searchAuthors;
+        ViewBag.AuthorId = searchAuthors;
       }
-      ViewBag.AuthorId = _db.Authors.ToList();
       return View();
     }
 
@@ -57,40 +60,40 @@ namespace Library.Controllers
       return RedirectToAction("Index");
     }
 
-    /*public ActionResult Edit(int id)
+    public ActionResult Edit(int id)
     {
-      var thisContractor = _db.Contractors.FirstOrDefault(contractors => contractors.ContractorId == id);
-      return View(thisContractor);
+      var thisBook = _db.Books.FirstOrDefault(books => books.BookId == id);
+      return View(thisBook);
     }
 
     [HttpPost]
-    public ActionResult Edit(Contractor contractor)
+    public ActionResult Edit(Book book)
     {
-      _db.Entry(contractor).State = EntityState.Modified;
+      _db.Entry(book).State = EntityState.Modified;
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
 
-    public ActionResult AddClient(int id)
+    public ActionResult AddAuthor(int id, string searchAuthor)
     {
-      var thisContractor = _db.Contractors.FirstOrDefault(contractors => contractors.ContractorId == id);
-      ViewBag.ClientId = new SelectList(_db.Clients, "ClientId", "Name");
-      return View(thisContractor);
+      var thisBook = _db.Books.FirstOrDefault(books => books.BookId == id);
+      if(!string.IsNullOrEmpty(searchAuthor))
+      {
+        var searchAuthors = _db.Authors.Where(authors => authors.Name.Contains(searchAuthor)).ToList();        
+        ViewBag.AuthorList = searchAuthors;
+      }
+      return View(thisBook);
     }
 
     [HttpPost]
-    public ActionResult AddClient(Contractor contractor, int ClientId)
+    public ActionResult AddAuthor(Book book, int[] AuthorList)
     {
-      var testvariable = _db.ClientContractor.FirstOrDefault(join=>join.ClientId == ClientId && join.ContractorId == contractor.ContractorId);
-
-      if(testvariable != null)
+      if(AuthorList.Length !=0)
       {
-      return RedirectToAction("Details", new {id=contractor.ContractorId});
-      }
-
-      if (ClientId != 0)
-      {
-      _db.ClientContractor.Add(new ClientContractor() { ClientId = ClientId, ContractorId = contractor.ContractorId });
+        foreach(int id in AuthorList)
+        {
+          _db.BooksAuthors.Add(new BookAuthor() { AuthorId = id, BookId = book.BookId});
+        }
       }
       _db.SaveChanges();
       return RedirectToAction("Index");
@@ -98,60 +101,26 @@ namespace Library.Controllers
 
     public ActionResult Delete(int id)
     {
-      var thisContractor = _db.Contractors.FirstOrDefault(contractors => contractors.ContractorId == id);
-      return View(thisContractor);
+      var thisBook = _db.Books.FirstOrDefault(books => books.BookId == id);
+      return View(thisBook);
     }
 
     [HttpPost, ActionName("Delete")]
     public ActionResult DeleteConfirmed(int id)
     {
-      var thisContractor = _db.Contractors.FirstOrDefault(contractors => contractors.ContractorId == id);
-      _db.Contractors.Remove(thisContractor);
+      var thisBook = _db.Books.FirstOrDefault(books => books.BookId == id);
+      _db.Books.Remove(thisBook);
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
 
-    [HttpPost]
-    public ActionResult DeleteClient(int joinId)
-    {
-      var joinEntry = _db.ClientContractor.FirstOrDefault(entry => entry.ClientContractorId == joinId);
-      _db.ClientContractor.Remove(joinEntry);
-      _db.SaveChanges();
-      return RedirectToAction("Index");
-    }
-
-    public ActionResult AddArmory(int id)
-    {
-      var thisContractor = _db.Contractors.FirstOrDefault(contractors => contractors.ContractorId == id);
-      ViewBag.ArmoryId = new SelectList(_db.Armories, "ArmoryId", "WeaponName");
-      return View(thisContractor);
-    }
-
-    [HttpPost]
-    public ActionResult AddArmory(Contractor contractor, int ArmoryId)
-    {
-      var testvariable = _db.ContractorArmory.FirstOrDefault(join=>join.ArmoryId == ArmoryId && join.ContractorId == contractor.ContractorId);
-
-      if(testvariable != null)
-      {
-      return RedirectToAction("Details", new {id=contractor.ContractorId});
-      }
-
-      if (ArmoryId != 0)
-      {
-      _db.ContractorArmory.Add(new ContractorArmory() { ArmoryId = ArmoryId, ContractorId = contractor.ContractorId });
-      }
-      _db.SaveChanges();
-      return RedirectToAction("Details", new {id=contractor.ContractorId});
-    }
-
-    [HttpPost]
-    public ActionResult DeleteArmory(int joinId)
-    {
-      var joinEntry = _db.ContractorArmory.FirstOrDefault(entry => entry.ContractorArmoryId == joinId);
-      _db.ContractorArmory.Remove(joinEntry);
-      _db.SaveChanges();
-      return RedirectToAction("Details", new {id=joinEntry.ContractorId});
-    }*/
+    // [HttpPost]
+    // public ActionResult DeleteAuthor(int joinId)
+    // {
+    //   var joinEntry = _db.ClientContractor.FirstOrDefault(entry => entry.ClientContractorId == joinId);
+    //   _db.ClientContractor.Remove(joinEntry);
+    //   _db.SaveChanges();
+    //   return RedirectToAction("Index");
+    // }
   }
 }
