@@ -28,6 +28,7 @@
     if(ViewBag.AuthorId.Count != 0) //Is there anything in it?
     {
       <div class="form-group"> 
+<<<<<<< HEAD
         @Html.Label("Select authors:")
         <br>
         @foreach (Author author in ViewBag.AuthorId)
@@ -35,6 +36,15 @@
           @Html.Label(author.Name)
           @Html.CheckBox("AuthorId", false, new { value = author.AuthorId, @class="checkbox"})
         }
+=======
+      @Html.Label("Select authors:")
+      <br>
+      @foreach (Author author in ViewBag.AuthorId)
+      {
+        @Html.Label(author.Name)
+        @Html.CheckBox("AuthorId", false, new { value = author.AuthorId, @class="checkbox"})
+      }
+>>>>>>> 9dda2668a2f0b3edaebcfb164c10d5ac2fc79294
       </div>
     }
     else
@@ -43,6 +53,10 @@
     }
   } 
   <input type="submit" value="Add new book" class="btn" />
+<<<<<<< HEAD
 }
 
 <p>@Html.ActionLink("Back to Book List", "Index")</p>
+=======
+}
+>>>>>>> 9dda2668a2f0b3edaebcfb164c10d5ac2fc79294
