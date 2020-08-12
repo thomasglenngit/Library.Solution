@@ -101,5 +101,14 @@ namespace Library.Controllers
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
+
+    [HttpPost]
+    public ActionResult DeleteBook(int joinId)
+    {
+      var joinEntry = _db.BooksAuthors.FirstOrDefault(entry => entry.BookAuthorId == joinId);
+      _db.BooksAuthors.Remove(joinEntry);
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
   }
 }

@@ -1,0 +1,43 @@
+@{
+  Layout = "_Layout";
+}
+
+@using Library.Models
+@model Library.Models.Author
+
+<p>Find book:</p>
+@using (Html.BeginForm("AddBook", "Authors", FormMethod.Get, new { id = @Model.AuthorId}))
+{ 
+  <p>@Html.TextBox("searchBook")</p>
+  <button class="btn" type="submit">Search</button>
+}
+@if(ViewBag.BookId != null) //Does it exist?
+{
+  if(ViewBag.BookId.Count != 0) //Is there anything in it?
+  {
+    <h3>Add book to an author:</h3>
+    <hr />
+    <p class="info">@Html.DisplayFor(model => model.Name)</p>
+    @using (Html.BeginForm())
+    {
+      @Html.HiddenFor(model => model.AuthorId)
+      <div class="form-group"> 
+        @Html.Label("Select book:")
+        <br>
+        @foreach (Book book in ViewBag.BookId)
+        {
+          @Html.Label(book.Title)
+          @Html.CheckBox("BookId", false, new { value = book.BookId, @class="checkbox"})
+        }
+      </div>
+      <input type="submit" value="Add book" class="btn" />
+    }
+  }
+  else
+  {
+    <p>No books have been found.</p>
+  }
+}
+
+<p>@Html.ActionLink("Back to Author List", "Index")</p>
+<p>@Html.ActionLink("Home", "Index", "Home")</p>

@@ -1,4 +1,6 @@
-
+@{
+  Layout = "_Layout";
+}
 
 @using Library.ViewModels
 @model RegisterViewModel
@@ -18,3 +20,6 @@
 
     <input type="submit" value="Register" />
 } 
+
+<p>@Html.ActionLink("Home", "Index", "Home")</p>
+<p>@Html.ActionLink("Log in", "Login")</p>
