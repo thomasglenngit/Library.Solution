@@ -74,7 +74,6 @@ namespace Library.Controllers
       return RedirectToAction("Index");
     }
 
-<<<<<<< HEAD
     public ActionResult AddAuthor(int id, string searchAuthor)
     {
       var thisBook = _db.Books.FirstOrDefault(books => books.BookId == id);
@@ -84,13 +83,6 @@ namespace Library.Controllers
         ViewBag.AuthorList = searchAuthors;
       }
       return View(thisBook);
-=======
-    /*public ActionResult AddClient(int id)
-    {
-      var thisBook = _db.Contractors.FirstOrDefault(contractors => contractors.ContractorId == id);
-      ViewBag.ClientId = new SelectList(_db.Clients, "ClientId", "Name");
-      return View(thisContractor);
->>>>>>> 9dda2668a2f0b3edaebcfb164c10d5ac2fc79294
     }
 
     [HttpPost]
@@ -105,7 +97,7 @@ namespace Library.Controllers
       }
       _db.SaveChanges();
       return RedirectToAction("Index");
-    }*/
+    }
 
     public ActionResult Delete(int id)
     {
@@ -122,7 +114,6 @@ namespace Library.Controllers
       return RedirectToAction("Index");
     }
 
-<<<<<<< HEAD
     // [HttpPost]
     // public ActionResult DeleteAuthor(int joinId)
     // {
@@ -131,49 +122,5 @@ namespace Library.Controllers
     //   _db.SaveChanges();
     //   return RedirectToAction("Index");
     // }
-=======
-   /*[HttpPost]
-    public ActionResult DeleteClient(int joinId)
-    {
-      var joinEntry = _db.ClientContractor.FirstOrDefault(entry => entry.ClientContractorId == joinId);
-      _db.ClientContractor.Remove(joinEntry);
-      _db.SaveChanges();
-      return RedirectToAction("Index");
-    }
-
-    public ActionResult AddArmory(int id)
-    {
-      var thisContractor = _db.Contractors.FirstOrDefault(contractors => contractors.ContractorId == id);
-      ViewBag.ArmoryId = new SelectList(_db.Armories, "ArmoryId", "WeaponName");
-      return View(thisContractor);
-    }
-
-    [HttpPost]
-    public ActionResult AddArmory(Contractor contractor, int ArmoryId)
-    {
-      var testvariable = _db.ContractorArmory.FirstOrDefault(join=>join.ArmoryId == ArmoryId && join.ContractorId == contractor.ContractorId);
-
-      if(testvariable != null)
-      {
-      return RedirectToAction("Details", new {id=contractor.ContractorId});
-      }
-
-      if (ArmoryId != 0)
-      {
-      _db.ContractorArmory.Add(new ContractorArmory() { ArmoryId = ArmoryId, ContractorId = contractor.ContractorId });
-      }
-      _db.SaveChanges();
-      return RedirectToAction("Details", new {id=contractor.ContractorId});
-    }
-
-    [HttpPost]
-    public ActionResult DeleteArmory(int joinId)
-    {
-      var joinEntry = _db.ContractorArmory.FirstOrDefault(entry => entry.ContractorArmoryId == joinId);
-      _db.ContractorArmory.Remove(joinEntry);
-      _db.SaveChanges();
-      return RedirectToAction("Details", new {id=joinEntry.ContractorId});
-    }*/
->>>>>>> 9dda2668a2f0b3edaebcfb164c10d5ac2fc79294
   }
 }
