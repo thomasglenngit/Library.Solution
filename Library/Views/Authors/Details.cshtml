@@ -1,7 +1,7 @@
 @{
   Layout = "_Layout";
 }
-
+@using System.Security.Claims
 @model Library.Models.Author
 
 <h3>Author info:</h3>
@@ -18,16 +18,24 @@ else
   @foreach(var join in Model.Books)
   {
     <p>@Html.ActionLink($"{join.Book.Title}", "Details", "Books", new { id = join.BookId})</p>
-    @using (Html.BeginForm("DeleteBook", "Authors"))
+    @if (User.Identity.IsAuthenticated && ViewBag.IsCurrentUser)
     {
-      @Html.Hidden("joinId", @join.BookAuthorId)
-      <input type="submit" value="Delete" class="btn" />
+      @using (Html.BeginForm("DeleteBook", "Authors"))
+      {
+        @Html.Hidden("joinId", @join.BookAuthorId)        
+        <input type="submit" value="Delete" class="btn" />
+      }
     }
   }
 }
 
-<p>@Html.ActionLink("Home", "Index", "Home")</p>
+
+@if (User.Identity.IsAuthenticated && ViewBag.IsCurrentUser)
+{
+  <p>@Html.ActionLink("Edit Author Details", "Edit", new { id = Model.AuthorId })</p>
+  <p>@Html.ActionLink("Delete Author", "Delete", new { id = Model.AuthorId })</p>
+  <p>@Html.ActionLink("Add a Book", "AddBook", new { id = Model.AuthorId })</p>
+}
 <p>@Html.ActionLink("Back to Author List", "Index")</p>
-<p>@Html.ActionLink("Edit Author Details", "Edit", new { id = Model.AuthorId })</p>
-<p>@Html.ActionLink("Delete Author", "Delete", new { id = Model.AuthorId })</p>
-<p>@Html.ActionLink("Add a Book", "AddBook", new { id = Model.AuthorId })</p>
+<p>@Html.ActionLink("Home", "Index", "Home")</p>
+

@@ -3,7 +3,10 @@
 }
 
 @using Library.Models;
+@using System.Security.Claims
 @model List<Library.Models.Author>
+
+<h3>Welcome @User.Identity.Name</h3>
 
 <p>Find author:</p>
 @using (Html.BeginForm("Index", "Authors", FormMethod.Get))
@@ -14,14 +17,20 @@
 <hr />
 <h3>Author list:</h3>
 <hr />
-@if (@Model.Count == 0)
+@if (Model.Any())
+{
+  @foreach (Author author in Model)
+  {
+    <p>@Html.ActionLink($"{author.Name}", "Details", new { id = author.AuthorId })</p> 
+  }
+}
+else
 {
   <p>No authors have been found.</p>
 } 
-@foreach (Author author in Model)
-{
-  <p>@Html.ActionLink($"{author.Name}", "Details", new { id = author.AuthorId })</p> 
-}
 
+@if (User.Identity.IsAuthenticated)
+{
+  <p>@Html.ActionLink("Add new author", "Create")</p>
+}
 <p>@Html.ActionLink("Home", "Index", "Home")</p>
-<p>@Html.ActionLink("Add new author", "Create")</p>

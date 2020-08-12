@@ -3,7 +3,10 @@
 }
 
 @using Library.Models;
+@using System.Security.Claims
 @model List<Library.Models.Book>
+
+<h3>Welcome @User.Identity.Name</h3>
 
 <p>Find book:</p>
 @using (Html.BeginForm("Index", "Books", FormMethod.Get))
@@ -12,16 +15,22 @@
   <button class="btn" type="submit">Search</button>
 }
 <hr />
-<h3>Book list:</h3>
+<h4>Book list:</h4>
 <hr />
-@if (@Model.Count == 0)
+@if (Model.Any())
+{
+  @foreach (Book book in Model)
+  {
+    <p>@Html.ActionLink($"{book.Title}", "Details", new { id = book.BookId })</p> 
+  }
+}
+else
 {
   <p>No books have been found.</p>
-} 
-@foreach (Book book in Model)
-{
-  <p>@Html.ActionLink($"{book.Title}", "Details", new { id = book.BookId })</p> 
 }
 
+@if (User.Identity.IsAuthenticated)
+{
+  <p>@Html.ActionLink("Add new book", "Create")</p>
+}
 <p>@Html.ActionLink("Home", "Index", "Home")</p>
-<p>@Html.ActionLink("Add new book", "Create")</p>

@@ -1,7 +1,7 @@
 @{
   Layout = "_Layout";
 }
-
+@using System.Security.Claims
 @model Library.Models.Book;
 
 <h3>Book Details</h3>
@@ -20,11 +20,14 @@ else
   @foreach(var join in Model.Authors)
   {
     <p>@Html.ActionLink(@join.Author.Name, "Details", "Authors", new {id = join.AuthorId})</p>
-    @using (Html.BeginForm("DeleteAuthor", "Books"))
+    @if (User.Identity.IsAuthenticated && ViewBag.IsCurrentUser)
     {
-      @Html.Hidden("joinId", @join.BookAuthorId)
-      <input type="submit" value="Delete" class="btn btn-warning"/>
-    }
+      @using (Html.BeginForm("DeleteAuthor", "Books"))
+      {
+        @Html.Hidden("joinId", @join.BookAuthorId)
+        <input type="submit" value="Delete" class="btn btn-warning"/>
+      }
+    }   
   }
 }
 
@@ -48,10 +51,14 @@ else
   } 
 }*@
 
-<p>@Html.ActionLink("Home", "Index", "Home")</p>
-<p>@Html.ActionLink("Back to Book List", "Index")</p>
-<p>@Html.ActionLink("Edit Book Details", "Edit", new { id = Model.BookId })</p>
-<p>@Html.ActionLink("Delete Book", "Delete", new { id = Model.BookId })</p>
-<p>@Html.ActionLink("Add a Author", "AddAuthor", new { id = Model.BookId })</p>
 
+
+@if (User.Identity.IsAuthenticated && ViewBag.IsCurrentUser)
+{
+  <p>@Html.ActionLink("Edit Book Details", "Edit", new { id = Model.BookId })</p>
+  <p>@Html.ActionLink("Delete Book", "Delete", new { id = Model.BookId })</p>
+  <p>@Html.ActionLink("Add a Author", "AddAuthor", new { id = Model.BookId })</p>
+}
+<p>@Html.ActionLink("Back to Book List", "Index")</p>
+<p>@Html.ActionLink("Home", "Index", "Home")</p>
 
