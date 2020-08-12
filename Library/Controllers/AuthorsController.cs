@@ -54,6 +54,7 @@ namespace Library.Controllers
       var thisAuthor  = _db.Authors
         .Include(author => author.Books)
         .ThenInclude(join => join.Book)
+        .Include(author => author.User)
         .FirstOrDefault(authors => authors.AuthorId == id);
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       ViewBag.IsCurrentUser = userId != null ? userId == thisAuthor.User.Id : false;
@@ -91,7 +92,6 @@ namespace Library.Controllers
       {
         return RedirectToAction("Details", new {id = id});
       }
-      var thisAuthor = _db.Authors.FirstOrDefault(authors => authors.AuthorId == id);
       return View(thisAuthor);
     }
 
@@ -123,13 +123,13 @@ namespace Library.Controllers
     }
 
     [HttpPost]
-    public ActionResult AddBook(Book book, int [] BookId)
+    public ActionResult AddBook(Author author, int [] BookId)
     {
       if(BookId.Length != 0)
       {
         foreach(int id in BookId)
         {
-          _db.BooksAuthors.Add(new BookAuthor() { BookId = id, BookAuthorId = book.BookId});
+          _db.BooksAuthors.Add(new BookAuthor() { BookId = id, AuthorId = author.AuthorId });
         }
       }
       _db.SaveChanges();

@@ -39,6 +39,7 @@ namespace Library.Controllers
           .ThenInclude(join => join.Author)
           .Include(book => book.Checkouts)
           .ThenInclude(join => join.Patron)
+          .Include(book => book.User)
           .FirstOrDefault(book => book.BookId == id);
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       ViewBag.IsCurrentUser = userId != null ? userId == thisBook.User.Id : false;
@@ -101,7 +102,7 @@ namespace Library.Controllers
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
       var thisBook = _db.Books.Where(entry => entry.User.Id == currentUser.Id).FirstOrDefault(books => books.BookId == id);
-      if (thisBook != null)
+      if (thisBook == null)
       {
         return RedirectToAction("Details", new {id = id});
       }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using System;
 
 
 namespace Library.Controllers
@@ -24,14 +25,17 @@ namespace Library.Controllers
       _db = db;
     }
 
-    public async Task<ActionResult> Index()
+    public ActionResult Index(string searchPatron)
     {
-      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-      var currentUser = await _userManager.FindByIdAsync(userId);
-      var userPatrons = _db.Patrons.Where(entry => entry.User.Id == currentUser.Id).ToList();
-      return View(userPatrons);
+      if(!string.IsNullOrEmpty(searchPatron))
+      {
+        var searchPatrons = _db.Patrons.Where(patrons => patrons.Name.Contains(searchPatron));                    
+        return View(searchPatrons);
+      }
+      return View(_db.Patrons.ToList());
     }
 
+    [Authorize]
     public ActionResult Create()
     {
       return View();
@@ -54,12 +58,21 @@ namespace Library.Controllers
           .Include(patron => patron.Checkouts)
           .ThenInclude(join => join.Book)
           .FirstOrDefault(patron => patron.PatronId == id);
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      ViewBag.IsCurrentUser = userId != null ? userId == thisPatron.User.Id : false;
       return View(thisPatron);
     }
 
-    public ActionResult Edit(int id)
+    [Authorize]
+    public async Task<ActionResult> Edit(int id)
     {
-      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.PatronId == id);
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      var thisPatron = _db.Patrons.Where(entry => entry.User.Id == currentUser.Id).FirstOrDefault(patrons => patrons.PatronId == id);
+      if (thisPatron == null)
+      {
+        return RedirectToAction("Details", new {id = id});
+      }
       return View(thisPatron);
     }
 
@@ -71,9 +84,16 @@ namespace Library.Controllers
       return RedirectToAction("Index");
     }
 
-    public ActionResult Delete(int id)
+    [Authorize]
+    public async Task<ActionResult> Delete(int id)
     {
-      var thisPatron = _db.Patrons.FirstOrDefault(patrons => patrons.PatronId == id);
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      var thisPatron = _db.Patrons.Where(entry => entry.User.Id == currentUser.Id).FirstOrDefault(patrons => patrons.PatronId == id);
+      if (thisPatron == null)
+      {
+        return RedirectToAction("Details", new {id = id});
+      }
       return View(thisPatron);
     }
 
@@ -84,6 +104,73 @@ namespace Library.Controllers
       _db.Patrons.Remove(thisPatron);
       _db.SaveChanges();
       return RedirectToAction("Index");
-    }   
+    }  
+
+    [Authorize]
+    public async Task<ActionResult> CheckOutBook(int id, string searchBook)
+    {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      var thisPatron = _db.Patrons.Where(entry => entry.User.Id == currentUser.Id).FirstOrDefault(patrons => patrons.PatronId == id);
+      if (thisPatron == null)
+      {
+        return RedirectToAction("Details", new {id = id});
+      }
+      if(!string.IsNullOrEmpty(searchBook))
+      {
+        var searchBooks = _db.Books.Where(books => books.Title.Contains(searchBook)).ToList();
+        ViewBag.BookId = searchBooks;
+      }
+      return View(thisPatron);
+    }
+
+    [HttpPost]
+    public ActionResult CheckOutBook(Patron patron, int[] BookId)
+    {
+      if(BookId.Length !=0)
+      {
+        foreach(int id in BookId)
+        {
+          _db.Checkouts.Add(new Checkout() { PatronId = patron.PatronId, BookId = id, DueDate = DateTime.Now + 30});
+        }
+      }
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
+
+    [Authorize]
+    public async Task<ActionResult> CheckInBook(int id, string searchBook)
+    {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      var thisPatron = _db.Patrons.Where(entry => entry.User.Id == currentUser.Id).FirstOrDefault(patrons => patrons.PatronId == id);
+      if (thisPatron == null)
+      {
+        return RedirectToAction("Details", new {id = id});
+      }
+      if(!string.IsNullOrEmpty(searchBook))
+      {
+        var searchBooks = _db.Books.Where(books => books.Title.Contains (searchBook)).ToList();
+        ViewBag.BookId = searchBooks;
+      }
+      return View(thisPatron);
+    
+    } 
+    [HttpPost]
+    public ActionResult CheckInBook(Patron patron, int[] BookId, DateTime DueDate)
+    {
+      if(BookId.Length !=0)
+      {
+        foreach(int id in BookId)
+        {
+          if(DueDate < (DateTime.Now + 30))
+          _db.Checkouts.Remove(new Checkout() { PatronId = patron.PatronId, BookId = id});
+        }
+      }
+      _db.SaveChanges();
+      return RedirectToAction("Index");
+    }
+
   }
 }
+

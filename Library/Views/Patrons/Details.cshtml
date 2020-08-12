@@ -1,0 +1,42 @@
+@{
+  Layout = "_Layout";
+}
+@using System.Security.Claims
+@model Library.Models.Patron;
+
+<h3>Book Details</h3>
+<hr />
+<h4>Name: @Model.Name</h4>
+<hr />
+
+<h1>Patrons</h1>
+<hr />
+
+@if(@Model.Checkouts.Count == 0)
+{
+  <h3>This Contractor Has No Assigned Weapons</h3>
+}
+else
+{
+  @foreach(var join in Model.Patrons)
+  {
+    <h4>@Html.ActionLink(@join.Armory.WeaponName, "Details", "Armorys", new {id = join.ArmoryId})</h4>
+    @using (Html.BeginForm("DeleteArmory", "Contractors"))
+    {
+      @Html.Hidden("joinId", @join.ContractorArmoryId)
+      <input type="submit" value="Delete" class="btn btn-warning"/>
+    }
+  } 
+}
+
+
+
+@if (User.Identity.IsAuthenticated && ViewBag.IsCurrentUser)
+{
+  <p>@Html.ActionLink("Edit Book Details", "Edit", new { id = Model.PatronId })</p>
+  <p>@Html.ActionLink("Delete Book", "Delete", new { id = Model.PatronId })</p>
+  <p>@Html.ActionLink("Add an Author", "AddAuthor", new { id = Model.PatronId })</p>
+}
+<p>@Html.ActionLink("Back to Book List", "Index")</p>
+<p>@Html.ActionLink("Home", "Index", "Home")</p>
+

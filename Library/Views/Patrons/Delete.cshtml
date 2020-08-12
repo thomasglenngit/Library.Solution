@@ -1,0 +1,16 @@
+@{
+  Layout = "_Layout";
+}
+
+@model Library.Models.Patron
+
+<h3>Delete Patron</h3>
+<hr />
+<h4>@Html.DisplayFor(model => model.Name)</h4>
+<p>Are you sure you want to delete this patron?</p>
+@using (Html.BeginForm())
+{
+    <input type="submit" value="Delete" class="btn btn-danger" />
+}
+<p>@Html.ActionLink("Back to Patron List", "Index")</p>
+<p>@Html.ActionLink("Home", "Index", "Home")</p>
