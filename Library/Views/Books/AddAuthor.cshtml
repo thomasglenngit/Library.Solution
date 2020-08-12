@@ -11,7 +11,7 @@
   <p>@Html.TextBox("searchAuthor")</p>
   <button class="btn" type="submit">Search</button>
 }
-if(ViewBag.AuthorList != null) //Does it exist?
+@if(ViewBag.AuthorList != null) //Does it exist?
 {
   if(ViewBag.AuthorList.Count != 0) //Is there anything in it?
   {
