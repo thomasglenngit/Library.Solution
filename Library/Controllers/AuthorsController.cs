@@ -4,15 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace Library.Controllers
 {
   public class AuthorsController : Controller
   {
     private readonly LibraryContext _db;
+    private readonly UserManager<ApplicationUser> _userManager; 
 
-    public  AuthorsController(LibraryContext db)
+    public  AuthorsController(UserManager<ApplicationUser> userManager, LibraryContext db)
     {
+      _userManager = userManager;
       _db = db;
     } 
 
@@ -26,14 +32,18 @@ namespace Library.Controllers
       return View(_db.Authors.ToList());
     }
 
+    [Authorize]
     public ActionResult Create()
     {
       return View();
     }
 
     [HttpPost]
-    public ActionResult Create(Author author)
+    public async Task<ActionResult> Create(Author author)
     {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      author.User = currentUser;
       _db.Authors.Add(author);
       _db.SaveChanges();
       return RedirectToAction("Index");
@@ -45,12 +55,21 @@ namespace Library.Controllers
         .Include(author => author.Books)
         .ThenInclude(join => join.Book)
         .FirstOrDefault(authors => authors.AuthorId == id);
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      ViewBag.IsCurrentUser = userId != null ? userId == thisAuthor.User.Id : false;
       return View(thisAuthor);
     }
-
-    public ActionResult Edit(int id)
+    
+    [Authorize]
+    public async Task<ActionResult> Edit(int id)
     {
-      var thisAuthor = _db.Authors.FirstOrDefault(authors => authors.AuthorId == id);
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      var thisAuthor = _db.Authors.Where(entry => entry.User.Id == currentUser.Id).FirstOrDefault(authors => authors.AuthorId == id);
+      if (thisAuthor == null)
+      {
+        return RedirectToAction("Details", new {id = id});
+      }
       return View(thisAuthor);
     }
 
@@ -61,9 +80,17 @@ namespace Library.Controllers
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
-
-    public ActionResult Delete(int id)
+    
+    [Authorize]
+    public async Task<ActionResult> Delete(int id)
     {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      var thisAuthor = _db.Authors.Where(entry => entry.User.Id == currentUser.Id).FirstOrDefault(authors => authors.AuthorId == id);
+      if (thisAuthor == null)
+      {
+        return RedirectToAction("Details", new {id = id});
+      }
       var thisAuthor = _db.Authors.FirstOrDefault(authors => authors.AuthorId == id);
       return View(thisAuthor);
     }
@@ -76,10 +103,17 @@ namespace Library.Controllers
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
-
-    public ActionResult AddBook(int id, string searchBook)
+    
+    [Authorize]
+    public async Task<ActionResult> AddBook(int id, string searchBook)
     {
-      var thisAuthor = _db.Authors.FirstOrDefault(authors => authors.AuthorId == id);
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      var thisAuthor = _db.Authors.Where(entry => entry.User.Id == currentUser.Id).FirstOrDefault(authors => authors.AuthorId == id);
+      if (thisAuthor == null)
+      {
+        return RedirectToAction("Details", new {id = id});
+      }
       if(!string.IsNullOrEmpty(searchBook))
       {
         var searchBooks = _db.Books.Where(books => books.Title.Contains(searchBook)).ToList();

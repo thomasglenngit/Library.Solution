@@ -15,7 +15,7 @@ namespace Library.Controllers
   public class BooksController : Controller
   {
     private readonly LibraryContext _db;
-     private readonly UserManager<ApplicationUser> _userManager; 
+    private readonly UserManager<ApplicationUser> _userManager; 
     public BooksController(UserManager<ApplicationUser> userManager, LibraryContext db)
     {
       _userManager = userManager;
@@ -98,7 +98,6 @@ namespace Library.Controllers
     [Authorize]
     public async Task<ActionResult> AddAuthor(int id, string searchAuthor)
     {
-
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
       var thisBook = _db.Books.Where(entry => entry.User.Id == currentUser.Id).FirstOrDefault(books => books.BookId == id);
