@@ -28,11 +28,11 @@
           @Html.Label(book.Title)
           @if(book.Copies > 0)
           {
-            @Html.CheckBox("AuthorList", false, new { value = author.AuthorId, @class="checkbox"})
+            @Html.CheckBox("BookId", false, new { value = book.BookId, @class="checkbox"})
           }
           else
           {
-            <span>No copies available</p>
+            <span>No copies available</span>
           }
         }
       </div>

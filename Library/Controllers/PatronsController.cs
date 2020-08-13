@@ -25,14 +25,18 @@ namespace Library.Controllers
       _db = db;
     }
 
-    public ActionResult Index(string searchPatron)
+    public async Task<ActionResult> Index(string searchPatron)
     {
-      if(!string.IsNullOrEmpty(searchPatron))
-      {
-        var searchPatrons = _db.Patrons.Where(patrons => patrons.Name.Contains(searchPatron));                    
-        return View(searchPatrons);
-      }
-      return View(_db.Patrons.ToList());
+      // if(!string.IsNullOrEmpty(searchPatron))
+      // {
+      //   var searchPatrons = _db.Patrons.Where(patrons => patrons.Name.Contains(searchPatron));                    
+      //   return View(searchPatrons);
+      // }
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      Patron patron = _db.Patrons.First(p => p.User == currentUser);
+      return RedirectToAction("Details", new { id = patron.PatronId });
+      //return View(_db.Patrons.ToList());
     }
 
     [Authorize]

@@ -2,15 +2,15 @@
   Layout = "_Layout";
 }
 
-@model Library.Models.Author
+@model Library.Models.Patron
 
-<h3>Edit author:</h3>
+<h3>Edit the patron:</h3>
 <hr />
 <h4>@Html.DisplayFor(model => @Model.Name)</h4>
 <hr />
 @using (Html.BeginForm())
 {
-  @Html.HiddenFor(model => model.AuthorId)
+  @Html.HiddenFor(model => model.PatronId)
   <div class="form-group">
     @Html.LabelFor(model => model.Name)
     @Html.EditorFor(model => model.Name, new {@class = "form-control", @required  = "required"})
@@ -18,5 +18,5 @@
   <input type="submit" value="Edit" class="btn" />
 }
 
-<p>@Html.ActionLink("Back to authors list", "Index")</p>
+<p>@Html.ActionLink("Back to patrons list", "Index")</p>
 <p>@Html.ActionLink("Home", "Index", "Home")</p>

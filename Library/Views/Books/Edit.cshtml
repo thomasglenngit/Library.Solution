@@ -15,11 +15,11 @@
   @Html.HiddenFor(model => model.BookId)
   <div class="form-group">
     @Html.LabelFor(model => model.Title)
-    @Html.TextBoxFor(model => model.Title, new { @class = "form-control", @required = true})
+    @Html.EditorFor(model => model.Title, new { @class = "form-control", @required = true})
   </div>
   <div class="form-group">
     @Html.LabelFor(model => model.Copies)
-    @Html.TextBoxFor(model => model.Copies, new { @class = "form-control", @required = true})
+    @Html.EditorFor(model => model.Copies, new { @class = "form-control", @required = true})
   </div>
   <input type="submit" value="Edit Book" class="btn btn-success" />
 }
