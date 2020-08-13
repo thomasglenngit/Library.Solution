@@ -2,17 +2,48 @@
   Layout = "_Layout";
 }
 
-@using System.Security.Claims
-@model Library.Models.Book;
+@using Library.Models
+@model Library.Models.Patron
 
-<h3>Checkout Book</h3>
-<hr />
-<h4>@Html.DisplayFor(model => model.Title)</h4>
-<p>Are you sure you want check this book out?</p>
-@using (Html.BeginForm())
+<p>Find book:</p>
+@using (Html.BeginForm("CheckOutBook", "Patrons", FormMethod.Get, new { id = @Model.PatronId}))
+{ 
+  <p>@Html.TextBox("searchBook")</p>
+  <button class="btn" type="submit">Search</button>
+}
+@if(ViewBag.BookId != null) //Does it exist?
 {
-  <input type="submit" value="Create" class="btn btn-danger" />
+  if(ViewBag.BookId.Count != 0) //Is there anything in it?
+  {
+    <h3>Checkout these books:</h3>
+    <hr />
+    @using (Html.BeginForm())
+    {
+      @Html.HiddenFor(model => model.PatronId)
+      <div class="form-group"> 
+        @Html.Label("Select books:")
+        <br>
+        @foreach (Book book in ViewBag.BookId)
+        {
+          @Html.Label(book.Title)
+          @if(book.Copies > 0)
+          {
+            @Html.CheckBox("AuthorList", false, new { value = author.AuthorId, @class="checkbox"})
+          }
+          else
+          {
+            <span>No copies available</p>
+          }
+        }
+      </div>
+      <input type="submit" value="Add books" class="btn" />
+    }
+  }
+  else
+  {
+    <p>No bookss have been found.</p>
+  }
 }
 
-<p>@Html.ActionLink("Back to Patron Page", "Index")</p>
+<p>@Html.ActionLink("Back to your page", "Details", new { id = Model.PatronId })</p>
 <p>@Html.ActionLink("Home", "Index", "Home")</p>

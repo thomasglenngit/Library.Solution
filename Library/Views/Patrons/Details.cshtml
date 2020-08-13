@@ -4,32 +4,31 @@
 @using System.Security.Claims
 @model Library.Models.Patron;
 
-<h3>Book Details</h3>
+<h3>Patron info:</h3>
 <hr />
 <h4>Name: @Model.Name</h4>
 <hr />
-
-<h1>Patrons</h1>
+<h4>Checkout books:</h4>
 <hr />
-
 @if(@Model.Checkouts.Count == 0)
 {
-  <h3>This Contractor Has No Assigned Weapons</h3>
+  <h3>No books checked out.</h3>
 }
 else
 {
-  @foreach(var join in Model.Patrons)
+  @foreach(var join in Model.Checkouts)
   {
-    <h4>@Html.ActionLink(@join.Armory.WeaponName, "Details", "Armorys", new {id = join.ArmoryId})</h4>
-    @using (Html.BeginForm("DeleteArmory", "Contractors"))
+    <p>@Html.ActionLink(@join.Book.Title, "Details", "Books", new {id = join.BookId})</p>
+    @if (User.Identity.IsAuthenticated && ViewBag.IsCurrentUser)
     {
-      @Html.Hidden("joinId", @join.ContractorArmoryId)
-      <input type="submit" value="Delete" class="btn btn-warning"/>
-    }
-  } 
+      @using (Html.BeginForm("CheckInBook", "Patrons"))
+      {
+        @Html.Hidden("joinId", @join.CheckoutId)
+        <input type="submit" value="Check In" class="btn btn-warning"/>
+      }
+    }   
+  }
 }
-
-
 
 @if (User.Identity.IsAuthenticated && ViewBag.IsCurrentUser)
 {
