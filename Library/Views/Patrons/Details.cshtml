@@ -32,10 +32,10 @@ else
 
 @if (User.Identity.IsAuthenticated && ViewBag.IsCurrentUser)
 {
-  <p>@Html.ActionLink("Edit Book Details", "Edit", new { id = Model.PatronId })</p>
-  <p>@Html.ActionLink("Delete Book", "Delete", new { id = Model.PatronId })</p>
-  <p>@Html.ActionLink("Add an Author", "AddAuthor", new { id = Model.PatronId })</p>
+  <p>@Html.ActionLink("Edit patron", "Edit", new { id = Model.PatronId })</p>
+  <p>@Html.ActionLink("Delete patron", "Delete", new { id = Model.PatronId })</p>
+  <p>@Html.ActionLink("Checkout book", "CheckOutBook", new { id = Model.PatronId })</p>
 }
-<p>@Html.ActionLink("Back to Book List", "Index")</p>
+<p>@Html.ActionLink("Back to Patron List", "Index")</p>
 <p>@Html.ActionLink("Home", "Index", "Home")</p>
 
