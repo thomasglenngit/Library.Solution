@@ -2,7 +2,7 @@
 
 #### _C#/.NET Project for [Epicodus](https://www.epicodus.com/), 2020.08.07_
 
-#### By **Evgenia Chernova and Thomas Glenn**
+#### By **Evgenya Chernaya and Thomas Glenn**
 
 ## Description
 A daily project for Epicodus school, which allows the librarian to add, edit, delete, checkin and checkout books. This project demonstrates many-to-many-many database relationships. 
