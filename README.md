@@ -1,6 +1,6 @@
-# _Library_
+**<h1 align = 'center'>LIbrary**
 
-#### _C#/.NET Project for [Epicodus](https://www.epicodus.com/), 2020.08.07_
+*<h2 align ='center'> C#/.NET Project for [Epicodus](https://www.epicodus.com/), 2020.08.07*
 
 #### By **Evgenya Chernaya and Thomas Glenn**
 
