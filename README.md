@@ -130,6 +130,8 @@ CREATE TABLE `Patrons` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 ```
+### Known Bugs:
+* Though administrator authorization is currently functional, patron authorization is incomplete.
 
 ### Edit
 * To view and edit the code, open the application in your preferred code editor, such as Visual Studio Code.
