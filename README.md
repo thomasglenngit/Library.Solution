@@ -4,6 +4,8 @@
 
 #### By **Evgenya Chernaya and Thomas Glenn**
 
+<h1 align='center'><img width='900' height='450' src='https://blog.oup.com/wp-content/uploads/2015/10/battistella-october-post-image-feature.jpg'><br>
+
 ## Description
 A daily project for Epicodus school, which allows the librarian to add, edit, delete, checkin and checkout books. This project demonstrates many-to-many-many database relationships. 
 
@@ -142,6 +144,17 @@ CREATE TABLE `Patrons` (
 * CSS
 * .html
 
-## License
-This software is licensed under the MIT license. Copyright (c) 2020 Thomas Glenn.
+# **❤️Contributors**
+
+| [<img src='https://coding-assets.s3-us-west-2.amazonaws.com/linked-in-images/evgeniya-chernaya.jpeg' width='160px;'/><br /><sub><b>Evgeniya Chernaya</b></sub>](https://www.linkedin.com/in/evgeniyach/)<br />
+
+<br>
+
+<br>
+
+![alt text][logo]
+
+[logo]: https://img.shields.io/bower/l/bootstrap 'MIT License'
+
+
 
